@@ -18,8 +18,8 @@ export class ResponseInterceptor implements NestInterceptor {
       }),
       catchError(error => {
         // Handle errors and format error response
-        const status = error.status || 500
-        const message = error.response.message || error.message || 'Internal server error'
+        const status = error?.status || 500
+        const message = error?.response?.message || error?.message || 'Internal server error'
         return throwError(this.responseHelper.error(message, status))
     }),
     )

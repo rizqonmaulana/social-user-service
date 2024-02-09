@@ -1,9 +1,10 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { UserAuthController } from './user-auth.controller';
-import { UserAuthService } from './user-auth.service';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './schemas/user-auth.schema';
+import { UserSchema } from './schemas/user.schema';
+import { secretKey } from './config'; 
 
 // Helpers
 import { ResponseHelper } from '../common/response.helper';
@@ -12,15 +13,15 @@ import { ResponseHelper } from '../common/response.helper';
   imports: [
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: secretKey.secret,
       signOptions: { expiresIn: '1h' }, 
     }),
   ],
-  controllers: [UserAuthController],
-  providers: [UserAuthService, ResponseHelper],
+  controllers: [UserController],
+  providers: [UserService, ResponseHelper],
 })
 
-export class UserAuthModule implements NestModule {
+export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
    }
 }

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException, ConflictException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { User } from './schemas/user-auth.schema'
+import { User } from './schemas/user.schema'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 
@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt'
 import { UpdateUserDto, RegisterDto } from './dto'
 
 @Injectable()
-export class UserAuthService {
+export class UserService {
     constructor( 
         @InjectModel(User.name) 
         private userModel: Model<User>, 
@@ -80,6 +80,15 @@ export class UserAuthService {
         } catch (error) {
           throw new Error('An error occurred while retrieving user')
         }
+    }
+
+    async getUserSearch(name : string){
+      try {
+        const regex = new RegExp(name, 'i'); // 'i' option for case-insensitive search
+        return await this.userModel.find({ name: { $regex: regex } }).select('-password -createdAt -updatedAt').exec();
+      } catch (error) {
+        throw new Error('An error occurred while retrieving user')
+      }
     }
 
     async updateUser(userId: string, updateUserDto: UpdateUserDto) {

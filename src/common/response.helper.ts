@@ -13,7 +13,7 @@ export class ResponseHelper {
     };
   }
 
-  error(message: string, statusCode: number = 400) {
+  error(message: string = 'Something wrong, please try again', statusCode: number = 400) {
     throw new HttpException({ status: 'error', message }, statusCode);
   }
 }
